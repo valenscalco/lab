@@ -1,0 +1,53 @@
+COMPUTACION II
+==============
+
+
+TP1
+---
+
+Fecha de entrega: 19/04/2016
+
+Problema
+~~~~~~~~
+
+Realizar un aplicación que sirva para unir partes de archivos en un solo
+archivo, y otra para dividir un archivo en una cantidad de partes iguales
+excepto la última.
+
+
+Requerimientos
+~~~~~~~~~~~~~~~
+
+* Las aplicaciones deberán ser compiladas con make.
+* Cada aplicación deberá contener como mínimo 2 funciones.
+
+
+Ejemplo modo de uso
+~~~~~~~~~~~~~~~~~~~
+----------------------------------------------
+$ ls part-* | ./pegar [archivo_salida]
+$ ./hachar [archivo_entrada]
+----------------------------------------------
+
+
+Objetivos
+~~~~~~~~~
+
+* Aprender a utilizar la redirección de la entrada y salida.
+
+* Manejo de archivos (apertura, escritura y cierre).
+
+* Utilizar un archivo Makefile para el proceso de compilación y testeo.
+
+
+
+Tips
+~~~~
+
+* funciones para el manejo de cadenas de caracteres en la biblioteca string.h
+* read()
+* write()
+* open()
+* close()
+
+
