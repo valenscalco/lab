@@ -3,14 +3,19 @@
 # <carlos.taffernaberry@um.edu.ar>
 
 CC=gcc
-CFLAGS=-g -Wall
+#CFLAGS=-g -Wall -DDEBUG
 
-tp2: tp2.o servicio.o
+tp2: tp2.c servicio.c monitor.c
 	$(CC) $(CFLAGS) -o $@ $^ 
 
 test: tp2
 	cat file.txt | ./tp2
-	sleep 2
+
+#cat new-file.txt | ./tp2
+
+justify-text:
+	# justify text at 80 characters
+	par 80j < file.txt > new-file.txt
 
 clean:
 	$(RM) tp2 *.o *~

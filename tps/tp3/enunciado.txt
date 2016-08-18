@@ -1,0 +1,60 @@
+COMPUTACION II
+==============
+
+
+TP3
+---
+
+Fecha de entrega: 30/08/2016
+
+
+Enunciado
+~~~~~~~~~
+
+Desarrollar una aplicación en la cual un proceso escriba en memoria un archivo dado, mientras
+que otro se encargue de procesarlo desde memoria compartida.
+El proceso hijo debe contar la cantidad de palabras y letras.
+El proceso padre debe mostrar los resultados por pantalla.
+
+
+Requisitos
+~~~~~~~~~~
+
+* Se deberá utilizar memoria compartida para comunicar los procesos.
+* Se deberá utilizar al menos un semáforo para sincronizar el acceso a memoria compartida.
+* Se permite el uso de printf() para debugging o para mostrar resultados por consola.
+* La aplicación deberá contener un archivo Makefile para compilarla y probarla.
+* La aplicación deberá contener como mínimo 3 módulos (3 archivos, de
+los cuales 1 será el main).
+* Para el parseo de palabras o argumentos se podrá utilizar funciones de las 
+bibliotecas de alto nivel.
+
+
+Ejemplo de uso  
+~~~~~~~~~~~~~~
+
+---------------------------------------------
+$ cat file.txt | ./tp3
+$ ./tp3 -i file.txt
+---------------------------------------------
+
+salida:
+
+--------------------------------------
+
+palabras de 2 letras: 8
+palabras de 3 letras: 21
+palabras de 4 letras: 5
+palabras de 5 letras: 8
+palabras de 6 letras: 10
+palabras de 7 letras: 9
+...
+
+--------------------------------------
+
+Tips
+~~~~
+
+* Funciones para el manejo de cadenas de caracteres en la biblioteca string.h
+* getopt() para el manejo de argumentos
+
