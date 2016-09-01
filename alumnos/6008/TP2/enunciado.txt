@@ -1,0 +1,82 @@
+COMPUTACION II
+==============
+
+
+TP2
+---
+
+Fecha de entrega: 24/05/2016
+
+
+Enunciado
+~~~~~~~~~
+
+Desarrollar una aplicación que muestre por stdout un histograma de "largo de 
+palabras".
+
+La arquitectura de la aplicación deberá seguir la siguiente estructura:
+
+* El proceso padre lanzará n+1 procesos hijos, donde n es pasado por la opcion -n.
+* Habrán n procesos hijos que realizarán el cálculo del histograma de largo de palabra.
+* Al finalizar, cada hijo deberá enviarle al proceso n+1 (hijo monitor) la cantidad de 
+veces que se encuentran palabras de un largo determinado, el cual los irá acumulando.
+* Una vez que el proceso monitor, reciba todos los resultados debe ordenarlos y 
+comunicarle al proceso padre el histograma, y éste enviarlos por stdout.
+* El ordenamiento que realizará el padre debe ser de acuerdo a la opción -o .
+ "-o d" de  mayor a menor o "-o a" de menor a mayor.
+
+
+Requisitos
+~~~~~~~~~~
+
+* Se deberán utilizar pipes y todas las funciones de bajo nivel vistas hasta ahora 
+(open, write, read, etc).
+* Se permite el uso de printf() para debugging o para mostrar resultados por consola.
+* No se aceptará ningún trabajo que contenga las funciones (fopen, fwrite y fread).
+* La aplicación deberá contener un archivo Makefile para compilarla y probarla.
+* La aplicación deberá contener como mínimo 3 módulos (3 archivos, de
+los cuales 1 será el main).
+* Para el parseo de palabras o argumentos se podrá utilizar funciones de las 
+bibliotecas de alto nivel.
+
+
+Ejemplo de uso  
+~~~~~~~~~~~~~~
+
+---------------------------------------------
+$ cat <archivo> | ./tp2 -n <nro_hijos> -o d
+---------------------------------------------
+
+salida:
+
+--------------------------------------
+
+42 palabras de 4 caracteres - 23.74 %
+33 palabras de 5 caracteres - 18.64 %
+23 palabras de 1 caracteres - 12.99 %
+21 palabras de 6 caracteres - 11.86 %
+14 palabras de 3 caracteres - 07.90 %
+12 palabras de 7 caracteres - 06.79 %
+11 palabras de 2 caracteres - 06.21 %
+11 palabras de 9 caracteres - 06.21 %
+6 palabras de 10 caracteres - 03.38 %
+3 palabras de 8 caracteres - 01.69 %
+1 palabras de 11 caracteres - 00.56 %
+0 palabras de 12 caracteres - 00.00 %
+0 palabras de 13 caracteres - 00.00 %
+0 palabras de 14 caracteres - 00.00 %
+0 palabras de 15 caracteres - 00.00 %
+
+--------------------------------------
+
+Tips
+~~~~
+
+* Los pipes están orientados a stream de bytes, y debemos usarlo como stream de mensajes.
+* Funciones para el manejo de cadenas de caracteres en la biblioteca string.h
+* man 2 write
+* man 2 open
+* man 2 read
+* man 2 pipe
+* manpages, manpages-dev, manpages-posix
+* getopt() para el manejo de argumentos

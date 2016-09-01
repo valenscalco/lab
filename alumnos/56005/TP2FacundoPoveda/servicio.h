@@ -17,5 +17,6 @@ int main (int, char **);
 int contarPalabras (char*);
 void crearHijos(int, int, char*, int);
 int detectarErrores(char*, char*, int, char*, int);
+void histograma(int,char *,int *,int *,int);
 
 #endif

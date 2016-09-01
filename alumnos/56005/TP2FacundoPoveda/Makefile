@@ -3,7 +3,7 @@ FLAGS= -Wall -g
 CC= gcc
 TARGETS= servicio
 
-servicio: servicio main.c contarPalabras.c crearHijos.c detectarErrores.c
+servicio: servicio main.c contarPalabras.c crearHijos.c detectarErrores.c histograma.c
 	$(CC) $(FLAGS) -o $@ $^
 clean:
 	rm -fv $(TARGETS) *.o *~

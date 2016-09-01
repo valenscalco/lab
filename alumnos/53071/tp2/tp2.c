@@ -1,7 +1,5 @@
 /*
  * Computación II: TP2: Comunicación entre procesos con pipes.
- * <carlos.taffernaberry@um.edu.ar>
- * <federico.hernandez@um.edu.ar>
  */
 #include <unistd.h>
 #include <string.h>
