@@ -1,9 +1,9 @@
 #include "http_h.h"
 
-char *types(char *mime){
+char *types(char *extension){
 
-    char *extension=malloc(256*sizeof(char));
-    memset(extension,0,256*(sizeof (char)));
+    char *mime=malloc(256*sizeof(char));
+    memset(mime,0,256*(sizeof (char)));
 
     if (strcmp(extension,"html") == 0){
         strncpy(mime,"text/html",256);

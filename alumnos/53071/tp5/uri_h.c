@@ -3,98 +3,62 @@
 char *URI (char *buffer,char *archivo, char *mime, char *ruta, long *longitud){
 
 	int fd,leido;
-	char *buffer2 = malloc(1024*sizeof(char));
-	char *buffer3 = malloc(256*sizeof(char));
-	char *buffer4 = malloc(256*sizeof(char));
+	char buffer2[1024];
+    memset(buffer2,0,sizeof(buffer2));
+	char buffer3[1024];
+	memset(buffer3,0,sizeof(buffer3));
+	char buffer4[1024];
+	memset(buffer4,0,sizeof(buffer4));
 	char bufferleido[256];
 	memset(bufferleido,0,sizeof(bufferleido));
-	char *version = malloc(256*sizeof(char));
-	char *archivo2;
+	char version[256];
+	memset(version,0,sizeof(version));
+	char archivo2[1024];
+	memset(archivo2,0,sizeof(archivo2));
 	char extensionaux[256];
 	memset(extensionaux,0,sizeof(extensionaux));
-	char *extension = malloc(256*sizeof(char));
-	//char *mime=malloc(256*sizeof(char));
-	//memset(mime,0,256*(sizeof (char)));
+	char extension[1024];
+	memset(extension,0,sizeof(extension));
+	char mime2[1024];
+	memset(mime2,0,sizeof(mime2));
 
 	strncpy(buffer2,buffer,strlen(buffer));
 
 	printf ("%s\n",buffer);
 	
-	strtok_r(buffer2," ",&version);//metodo get
-	strtok_r(NULL," ",&version);
+	strtok_r(buffer2," ",(char **)&version);//metodo get
+	strtok_r(NULL," ",(char **)&version);
 	
-
-	buffer3 = strtok(buffer,"/");
-	buffer3 = strtok(NULL," "); 
-	archivo2 = buffer3; // el nombre del archivo que solicito el cliente
+	strcpy (buffer3 , strtok(buffer,"/"));
+	strcpy(buffer3 ,strtok(NULL," ")); 
+	strcpy(archivo2, buffer3); // el nombre del archivo que solicito el cliente
 
 	strncpy(extensionaux,archivo2,strlen(archivo2));
 
-	buffer4 = strtok(extensionaux,".");
-	buffer4 = strtok(NULL," ");
+	strcpy(buffer4, strtok(extensionaux,"."));
+	strcpy(buffer4, strtok(NULL," "));
 	
 	
 	if (buffer4 == NULL){
-	extension = "error";
+	strcpy(extension, "error");
 	}else {
-		extension = buffer4;
+		strcpy(extension, buffer4);
 	}
 
-    //printf("buffer4==%s\n\n",extension);
-    //extension2 = types(extension,mime);
-    //printf("extension2==%s\n\n",extension2);
-	if (strcmp(extension,"html") == 0){
-			strncpy(mime,"text/html",256);
-	}
-
-	if (strcmp(extension,"jpg") == 0){
-			strncpy(mime,"image/jpeg",256);
-	}
-
-	if (strcmp(extension,"pdf") == 0){
-			strncpy(mime,"application/pdf",256);
-	}
-
-	if (strcmp(extension,"txt") == 0){
-			strncpy(mime,"text/plain",256);
-	}
-
-	if (strcmp(extension,"png") == 0){
-			strncpy(mime,"image/png",256);
-	}
-
-	if (strcmp(extension,"mp3") == 0){
-			strncpy(mime,"audio/mpeg",256);
-	}
-
-	if (strcmp(extension,"mp4") == 0){
-			strncpy(mime,"video/mp4",256);
-	}
-
-	if (strcmp(extension,"gif") == 0){
-			strncpy(mime,"image/gif",256);
-	}
-
-	if (strcmp(extension,"json") == 0){
-			strncpy(mime,"application/json",256);
-	}
-
-	if (strcmp(extension,"error") == 0){
-		strncpy(mime,"error",256);
-	}
-	
-    printf("mime==%s\n\n",mime);
+    strcpy(mime2,types(extension));
+    
+	strncpy(mime,mime2,strlen(mime2));
 	strncpy(archivo,ruta,256);
 	strncat(archivo,archivo2,256);
 
 	if ((fd = open(archivo,O_RDONLY)) != -1){ // si el archivo existe
 			
-		while ((leido = read(fd,bufferleido,sizeof(bufferleido))) > 0)
+		while ((leido = read(fd,bufferleido,sizeof(bufferleido))) > 0)//despues ver llamada a sistema fstat
 
 			*longitud = *longitud + leido;
 			
 			close (fd);
 	}
 
-	return version;
-}
+	return *(char **)version;
+} 

@@ -19,6 +19,8 @@
 
 void *http(void *sd_conn);
 
+int create_sock(int puerto);
+
 char *types (char *extension);
 
 char *URI (char *buffer,char *archivo, char *extension2, char *ruta, long *longitud);

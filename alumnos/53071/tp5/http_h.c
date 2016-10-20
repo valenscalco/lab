@@ -24,16 +24,13 @@ void *http(void *sd_conn){
         memset(mime,0,sizeof(mime));
         version = URI(buffer,archivo,mime,ruta, &longitud); //funcion para identificar el archivo solicitado
 
-        
-    //printf("mime en http==%s\n\n",mime);
-        write(STDOUT_FILENO,mime,sizeof mime);
         if (!(strncmp(buffer,"GET",3) == 0) && !(strncmp(buffer,"POST",4) == 0)){
             estado = "500 INTERNAL SERVER ERROR\n";
             write(sdc,estado,strlen(estado));
             exit(0);
         } else if (!(strncmp(version,"HTTP/1.0",8) == 0) && !(strncmp(version,"HTTP/1.1",8) == 0)){
-            //write(STDOUT_FILENO,version,sizeof version);
-            estado = "ERROR VERSION --> HTTP/1.0\n";
+            write(STDOUT_FILENO,version,sizeof version);
+            estado = "ERROR VERSION --> HTTP/1.0 o HTTP/1.1\n";
             write(sdc,estado,strlen(estado));
             exit(0);
         }
@@ -56,7 +53,6 @@ void *http(void *sd_conn){
                 if (strncmp(buffer,"POST",4)==0){
                 printf("Content-Length: %ld\nContent-Type: %s\n\n",longitud, mime); 
                 }
-                //printf("holaaaaaaaaaaaaaaa\n");
                 memset(buffer2,0,sizeof(buffer2));
             }
             close(fd);
@@ -65,7 +61,6 @@ void *http(void *sd_conn){
 
         }
 
-        //pthread_exit(NULL);
     } 
 
     close(fd);
