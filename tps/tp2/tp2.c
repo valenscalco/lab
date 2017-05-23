@@ -7,6 +7,8 @@ void hijoA(int *pfd);
 void hijoB(int *pfd);
 
 int launchProc(int nh, int *pfd);
+int count_w(char *line);
+
 
 int main(int argc, char **argv)
 {
@@ -56,13 +58,16 @@ void hijoA(int *pfd)
 {
     char buf[80];
     int nread;
+    int count = 0;
 
     memset(buf, 0, sizeof buf);
     close(pfd[1]);
 
     while ((nread = read(pfd[0], &buf, 80)) > 0) {
-        write(STDOUT_FILENO, &buf, nread);
+        count += count_w(buf);
     }
+
+    printf("hijoA(): %d\n", count);
 
     close(pfd[0]);
     exit(0);
@@ -72,15 +77,30 @@ void hijoB(int *pfd)
 {
     char buf[80];
     int nread;
+    int count = 0;
 
     memset(buf, 0, sizeof buf);
     close(pfd[1]);
 
     while ((nread = read(pfd[0], &buf, 80)) > 0) {
-        write(STDOUT_FILENO, &buf, nread);
+        count += count_w(buf);
     }
+
+    printf("hijoB(): %d\n", count);
 
     close(pfd[0]);
     exit(0);
 }
 
+int count_w(char *line)
+{
+    char *tok;
+    char *delim = " ";
+    int count = 0;
+
+    for (tok = strtok(line, delim);
+            tok != NULL;
+            tok = strtok(NULL, delim), count++);
+
+    return count;
+}
