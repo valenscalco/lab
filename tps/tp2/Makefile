@@ -4,6 +4,9 @@ TARGETS=tp2
 
 all: $(TARGETS)
 
+tp2: tp2.c parser.c proc.c
+	$(CC) $(CFLAGS) -o $@ $^
+
 test: tp2
 	cat noticia | ./tp2
 
