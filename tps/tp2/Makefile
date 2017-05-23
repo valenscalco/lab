@@ -4,6 +4,9 @@ TARGETS=tp2
 
 all: $(TARGETS)
 
+test: tp2
+	cat noticia | ./tp2
+
 format-text:
 	fold -w 80 -s noticia > noticia2
 	#fmt -w 80 noticia > noticia2
