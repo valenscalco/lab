@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import array
 from argparse import ArgumentParser
 import os
 import multiprocessing
@@ -26,10 +27,6 @@ class Proceso():
         path = os.path.dirname(os.path.abspath(__file__))
         size = int(args.size)
         archivo = os.open(path + "/" + args.file, os.O_RDONLY)
-        # Crear archivo azul, rojo, verde
-        archivo_r = os.open(path + "/r_" + args.file, os.O_WRONLY)
-        archivo_g = os.open(path + "/g_" + args.file, os.O_WRONLY)
-        archivo_b = os.open(path + "/b_" + args.file, os.O_WRONLY)
         i = 0
         while True:
             leido = os.read(archivo, size)  # cambiarleidoporimagenoalgoparecid
@@ -40,7 +37,7 @@ class Proceso():
                     barra_n_as = leido.find(b"\n# ")
                     barra_n = leido.find(b"\n", barra_n_as + 1)
                     leido = leido.replace(leido[barra_n_as:barra_n], b"")
-                print(leido)
+                #print(leido)
             # sacar encabezado
                 primer_n = leido.find(b"\n") + 1
                 seg_n = leido.find(b"\n", primer_n) + 1
@@ -52,7 +49,7 @@ class Proceso():
                 lista_g = [i for i in cuerpo_imagen]
                 lista_b = [i for i in cuerpo_imagen]
                 print(encabezado)
-                print(lista_imagen)
+                #print(lista_imagen)
             else:
                 cuerpo_imagen = leido
             lista_imagen = [i for i in cuerpo_imagen]
@@ -60,15 +57,6 @@ class Proceso():
             lista_g = [i for i in cuerpo_imagen]
             lista_b = [i for i in cuerpo_imagen]
             i += 1
-            filtro_r = self.intensidad_r(lista_r, args.red)
-            print("Filtro rojo")
-            print(filtro_r)
-            filtro_g = self.intensidad_g(lista_g, args.green)
-            print("Filtro verde")
-            print(filtro_g)
-            filtro_b = self.intensidad_b(lista_b, args.blue)
-            print("Filtro blue")
-            print(filtro_b)
             if cant != size:
                 break
         os.close(archivo)
