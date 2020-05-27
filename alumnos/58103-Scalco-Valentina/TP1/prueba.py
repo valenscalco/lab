@@ -45,23 +45,24 @@ class Proceso():
                 encabezado = leido[:ultima_barra_n].decode()
                 cuerpo_imagen = leido[ultima_barra_n:]
                 lista_imagen = [i for i in cuerpo_imagen]
-                lista_r = [i for i in cuerpo_imagen]
-                lista_g = [i for i in cuerpo_imagen]
-                lista_b = [i for i in cuerpo_imagen]
+                print(lista_imagen)
+                #lista_r = [i for i in cuerpo_imagen]
+                #lista_g = [i for i in cuerpo_imagen]
+                #lista_b = [i for i in cuerpo_imagen]
                 print(encabezado)
                 #print(lista_imagen)
             else:
                 cuerpo_imagen = leido
             lista_imagen = [i for i in cuerpo_imagen]
-            lista_r = [i for i in cuerpo_imagen]
-            lista_g = [i for i in cuerpo_imagen]
-            lista_b = [i for i in cuerpo_imagen]
+            #lista_r = [i for i in cuerpo_imagen]
+            #lista_g = [i for i in cuerpo_imagen]
+            #lista_b = [i for i in cuerpo_imagen]
             i += 1
             if cant != size:
                 break
         os.close(archivo)
 
-    def intensidad_r(self, lista, intensidad):
+'''    def intensidad_r(self, lista, intensidad):
         self.lista = lista
         x = 0
         for i in range(0, len(lista), 3):
@@ -102,7 +103,7 @@ class Proceso():
             if x-1 < len(lista):
                 self.lista[i + 1] = 0
             self.lista[i] = 0
-        return self.lista
+        return self.lista'''
 
 
 if __name__ == "__main__":
