@@ -19,19 +19,6 @@ parser.add_argument('-c', '--child', default=0, help='Cantidad de hijos para pro
 
 args = parser.parse_args()
 
-'''try:
-    if args.red < 0 or args.green < 0 or args.blue < 0 or args.size <= 0:
-        raise ValueError
-except ValueError:
-    print("Error. Los valores negativos no son válidos")
-    sys.exit()
-
-try:
-    if args.file.find(".ppm") == -1:
-        raise UserWarning
-except UserWarning:
-    print("Error. Archivo no es PPM")
-    sys.exit()'''
 
 
 queuer = multiprocessing.Queue()
@@ -67,10 +54,10 @@ def main(archivo, color, intensidad):
     if color == 'red':
         # envio primer parte del cuerpo
         queuer.put(cuerpo)
-        hilos = []
+        h_r = []
         for i in range(int(args.child)):
-            hilos.append(multiprocessing.Process(target=cambiar_colores_red, args=(encabezado, queuer, intensidad)))
-            hilos[i].start()
+            h_r.append(multiprocessing.Process(target=cambiar_colores_red, args=(encabezado, queuer, intensidad)))
+            h_r[i].start()
         while True:
             # paso el resto del cuerpo
             cuerpo = os.read(archivo1, int(args.size))
@@ -78,12 +65,11 @@ def main(archivo, color, intensidad):
             if len(cuerpo) != int(args.size):
                 break
         queuer.put("Terminamos")
-        for i in range(len(hilos)):
-            print(hilos[i])
-            hilos[i].join()
-            print(hilos[i])
-
-        '''for j in hilos:
+        for i in range(len(h_r)):
+            print(h_r[i])
+            h_r[i].join()
+            print(h_r[i])
+        '''for j in h_r:
             print(j)
             j.join()
             print(j)'''
