@@ -48,25 +48,19 @@ def main(archivo, color, intensidad):
     cuerpo = leido[ultima_barra_n:]
     # envio primer parte del cuerpo
     queuec.put(cuerpo)
-    h_c = []
-    for i in range(int(args.child)):
-        h_c.append(multiprocessing.Process(target=cambiar_colores, args=(encabezado, queuec, intensidad, color)))
-        h_c[i].start()
+    # creo hijos
+    h_c = multiprocessing.Process(target=cambiar_colores, args=(encabezado, queuec, intensidad, color))
+    # inicio los hijos
+    h_c.start()
+    # paso el resto del cuerpo
     while True:
-        # paso el resto del cuerpo
         cuerpo = os.read(archivo1, int(args.size))
         queuec.put(cuerpo)
         if len(cuerpo) != int(args.size):
             break
     queuec.put("Terminamos")
-    for i in range(len(h_c)):
-        print(h_c[i])
-        h_c[i].join()
-        print(h_c[i])
-    '''for j in h_c:
-        print(j)
-        j.join()
-        print(j)'''
+    # uno al los hijos con el padre
+    h_c.join()
     # cierro el archivo
     os.close(archivo1)
     tiempo = time()

@@ -11,28 +11,13 @@ from time import time
 
 # Definicion de los argumentos
 parser = argparse.ArgumentParser(description='Tp3 - servidor web y filtro de ppm')
-parser.add_argument('-d', '--documentroot', type=int, default=10,
+parser.add_argument('-d', '--documentroot', default='/home/valenscalco/comp2/lab/alumnos/58103-Scalco-Valentina/TP3/', type=str,
                     help='Directorio donde están los documentos web')
 parser.add_argument('-p', '--port', default=5000, help='Puertoen donde espera conexiones')
 parser.add_argument('-s', '--size', default=1024, help='Bloque de lectura máximo para los documentos')
 parser.add_argument('-c', '--child', default=0, help='Cantidad de hijos para procesar')
 
 args = parser.parse_args()
-
-'''try:
-    if args.red < 0 or args.green < 0 or args.blue < 0 or args.size <= 0:
-        raise ValueError
-except ValueError:
-    print("Error. Los valores negativos no son válidos")
-    sys.exit()
-
-try:
-    if args.file.find(".ppm") == -1:
-        raise UserWarning
-except UserWarning:
-    print("Error. Archivo no es PPM")
-    sys.exit()'''
-
 
 queuer = multiprocessing.Queue()
 queueg = multiprocessing.Queue()
@@ -156,7 +141,7 @@ def cambiar_colores_red(encabezado, queuer, intensidad):
         imager.append(0)
         imager.append(0)
     image_r = array.array('B', imager)
-    with open('/home/valenscalco/server/red.ppm', 'wb') as f:
+    with open(args.documentroot + 'red.ppm', 'wb') as f:
         f.write(bytearray(encabezado, 'ascii'))
         image_r.tofile(f)
 
@@ -179,7 +164,7 @@ def cambiar_colores_green(encabezado, queueg, intensidad):
         imageg.append(valor)
         imageg.append(0)
     image_g = array.array('B', imageg)
-    with open('/home/valenscalco/server/green.ppm', 'wb') as f:
+    with open(args.documentroot + 'green.ppm', 'wb') as f:
         f.write(bytearray(encabezado, 'ascii'))
         image_g.tofile(f)
 
@@ -202,7 +187,7 @@ def cambiar_colores_blue(encabezado, queueb, intensidad):
         imageb.append(0)
         imageb.append(valor)
     image_b = array.array('B', imageb)
-    with open('/home/valenscalco/server/blue.ppm', 'wb') as f:
+    with open(args.documentroot + 'blue.ppm', 'wb') as f:
         f.write(bytearray(encabezado, 'ascii'))
         image_b.tofile(f)
 
@@ -233,7 +218,7 @@ def cambiar_colores_bw(encabezado, queuebw, intensidad):
             prom = 0
             i = 0
     image_b = array.array('B', imageb)
-    with open('/home/valenscalco/server/black&white.ppm', 'wb') as f:
+    with open(args.documentroot + 'black&white.ppm', 'wb') as f:
         f.write(bytearray(encabezado, 'ascii'))
         image_b.tofile(f)
 
@@ -247,10 +232,8 @@ class Handler(socketserver.BaseRequestHandler):
         if archivo == './':
             archivo = './index.html'
         extension = archivo.split('.')[2]
-        '''print(self.client_address)
-        print(self.data)'''
         if archivo == './index.html':
-            path = '/home/valenscalco/server/'
+            path = args.documentroot
             os.chdir(path)
             fd = os.open(archivo, os.O_RDONLY)
             body = os.read(fd, 50000)
@@ -264,23 +247,23 @@ class Handler(socketserver.BaseRequestHandler):
                 intensidad = archivo.split("?")[1].split("=")[1]
                 archivo = archivo.split("?")[0]
                 main(archivo, color, int(intensidad))
-                archivo = '/home/valenscalco/server/' + color + '.' + extension
+                archivo = args.documentroot + color + '.' + extension
             else:
-                archivo = '/home/valenscalco/server/' + archivo.split('/')[1]
+                archivo = args.documentroot + archivo.split('/')[1]
 
         fd = os.open(archivo, os.O_RDONLY)
         body = os.read(fd, os.path.getsize(archivo))
         os.close(fd)
 
         if archivo.find("ppm") != -1:
-            remove('/home/valenscalco/server/' + color + '.' + extension)
+            remove(args.documentroot + color + '.' + extension)
 
         header = bytearray("HTTP/1.1 200 OK\r\nContent-type:" + dic[extension] + "\r\nContent-length:" + str(len(body))+"\r\n\r\n", 'utf8')
         self.request.sendall(header)
         self.request.sendall(body)
 
         if archivo == './404Error.html':
-            path = '/home/valenscalco/server/'
+            path = args.documentroot
             os.chdir(path)
             fd = os.open(archivo, os.O_RDONLY)
             body = os.read(fd, 50000)
@@ -289,7 +272,7 @@ class Handler(socketserver.BaseRequestHandler):
             self.request.sendall(header)
             self.request.sendall(body)
         if archivo == './500error.html':
-            path = '/home/valenscalco/server/'
+            path = args.documentroot
             os.chdir(path)
             fd = os.open(archivo, os.O_RDONLY)
             body = os.read(fd, 50000)
