@@ -6,7 +6,7 @@ import argparse
 import array
 import multiprocessing
 import socketserver
-from time import time
+import time
 
 
 # Definicion de los argumentos
@@ -15,7 +15,7 @@ parser.add_argument('-d', '--documentroot', default='/home/valenscalco/comp2/lab
                     help='Directorio donde están los documentos web')
 parser.add_argument('-p', '--port', default=5000, help='Puertoen donde espera conexiones')
 parser.add_argument('-s', '--size', default=1024, help='Bloque de lectura máximo para los documentos')
-parser.add_argument('-c', '--child', default=0, help='Cantidad de hijos para procesar')
+parser.add_argument('-c', '--child', default=1, help='Cantidad de hijos para procesar')
 
 args = parser.parse_args()
 
@@ -28,6 +28,7 @@ def main(archivo, color, intensidad):
     size = int(args.size)
     try:
         archivo1 = os.open(path + "/" + archivo, os.O_RDONLY)
+        t = os.path.getsize(archivo1)
     except FileNotFoundError:
         print("El archivo no se encuentra en el directorio")
         sys.exit()
@@ -49,16 +50,29 @@ def main(archivo, color, intensidad):
     # envio primer parte del cuerpo
     queuec.put(cuerpo)
     h_c = []
-    for i in range(int(args.child)):
+    mayo = True
+    count = t // size
+    count2 = (count-1) // int(args.child)
+    r = 0
+    while mayo is True:
         h_c.append(multiprocessing.Process(target=cambiar_colores, args=(encabezado, queuec, intensidad, color)))
-        h_c[i].start()
-    while True:
-        # paso el resto del cuerpo
-        cuerpo = os.read(archivo1, int(args.size))
-        queuec.put(cuerpo)
-        if len(cuerpo) != int(args.size):
-            break
-    queuec.put("Terminamos")
+        h_c[r].start()
+        '''for i in range(int(args.child)):
+            h_c.append(multiprocessing.Process(target=cambiar_colores, args=(encabezado, queuec, intensidad, color)))
+            h_c[i].start()'''
+        for i in range(count2):
+            # while True:
+            # paso el resto del cuerpo
+            cuerpo = os.read(archivo1, int(args.size))
+            queuec.put(cuerpo)
+            # if len(cuerpo) != int(args.size):
+            #    break
+        # for i in range(int(args.child)):
+        queuec.put("Terminamos")
+    # h_c[r].join()
+        r += 1
+        if r == int(args.child):
+            mayo = False
     for i in range(len(h_c)):
         print(h_c[i])
         h_c[i].join()
@@ -69,8 +83,8 @@ def main(archivo, color, intensidad):
         print(j)'''
     # cierro el archivo
     os.close(archivo1)
-    tiempo = time()
-    print("El tiempo de ejecución es: ", time() - tiempo, "segundos")
+    tiempo = time.time()
+    print("El tiempo de ejecución es: ", time.time() - tiempo, "segundos")
 
 
 # Estas funciones se encarga de escalar el color de la imagen
@@ -79,12 +93,22 @@ def cambiar_colores(encabezado, queuec, intensidad, color):
     cuerpo = b''
     prom = 0
     i = 0
+    '''h = 0
+    r = 0
+    kep = True'''
     while True:
         mensaje = queuec.get()
         if mensaje == "Terminamos":
             break
         else:
             cuerpo = cuerpo + mensaje
+    '''while kep is True:
+        for h in range(count2):
+            mensaje = queuec.get()
+            cuerpo = cuerpo + mensaje
+        r += 1
+        if r == int(args.child):
+            kep = False'''
     cuerpo_c = [i for i in cuerpo]
     if color == 'red':
         for j in range(0, len(cuerpo_c), 3):
