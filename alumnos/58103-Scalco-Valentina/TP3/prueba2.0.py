@@ -50,37 +50,23 @@ def main(archivo, color, intensidad):
     # envio primer parte del cuerpo
     queuec.put(cuerpo)
     h_c = []
-    mayo = True
-    count = t // size
-    count2 = (count-1) // int(args.child)
-    r = 0
-    while mayo is True:
-        h_c.append(multiprocessing.Process(target=cambiar_colores, args=(encabezado, queuec, intensidad, color)))
-        h_c[r].start()
-        '''for i in range(int(args.child)):
-            h_c.append(multiprocessing.Process(target=cambiar_colores, args=(encabezado, queuec, intensidad, color)))
-            h_c[i].start()'''
-        for i in range(count2):
-            # while True:
-            # paso el resto del cuerpo
-            cuerpo = os.read(archivo1, int(args.size))
-            queuec.put(cuerpo)
-            # if len(cuerpo) != int(args.size):
-            #    break
-        # for i in range(int(args.child)):
+    lock = multiprocessing.Lock()
+    # kep = []
+    for i in range(int(args.child)):
+        h_c.append(multiprocessing.Process(target=cambiar_colores, args=(encabezado, queuec, intensidad, color, lock)))
+        h_c[i].start()
+    while True:
+        # paso el resto del cuerpo
+        cuerpo = os.read(archivo1, int(args.size))
+        queuec.put(cuerpo)
+        if len(cuerpo) != int(args.size):
+            break
+    for i in range(int(args.child)):
         queuec.put("Terminamos")
-    # h_c[r].join()
-        r += 1
-        if r == int(args.child):
-            mayo = False
     for i in range(len(h_c)):
         print(h_c[i])
         h_c[i].join()
         print(h_c[i])
-    '''for j in h_c:
-        print(j)
-        j.join()
-        print(j)'''
     # cierro el archivo
     os.close(archivo1)
     tiempo = time.time()
@@ -88,27 +74,18 @@ def main(archivo, color, intensidad):
 
 
 # Estas funciones se encarga de escalar el color de la imagen
-def cambiar_colores(encabezado, queuec, intensidad, color):
+def cambiar_colores(encabezado, queuec, intensidad, color, lock):
     imagec = []
     cuerpo = b''
     prom = 0
     i = 0
-    '''h = 0
-    r = 0
-    kep = True'''
+    lock.acquire()
     while True:
         mensaje = queuec.get()
         if mensaje == "Terminamos":
             break
         else:
             cuerpo = cuerpo + mensaje
-    '''while kep is True:
-        for h in range(count2):
-            mensaje = queuec.get()
-            cuerpo = cuerpo + mensaje
-        r += 1
-        if r == int(args.child):
-            kep = False'''
     cuerpo_c = [i for i in cuerpo]
     if color == 'red':
         for j in range(0, len(cuerpo_c), 3):
@@ -148,6 +125,7 @@ def cambiar_colores(encabezado, queuec, intensidad, color):
                 imagec.append(prom)
                 prom = 0
                 i = 0
+    lock.release()
     image_r = array.array('B', imagec)
     with open(args.documentroot + color + '.ppm', 'wb') as f:
         f.write(bytearray(encabezado, 'ascii'))
