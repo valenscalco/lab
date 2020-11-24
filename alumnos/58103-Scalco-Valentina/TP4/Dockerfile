@@ -1,11 +1,11 @@
-FROM python:3.7
+FROM alpine
 
+EXPOSE 5000
+
+RUN apk update && apk add python3
+RUN apk add git
 RUN git clone https://github.com/valenscalco/lab.git
-COPY requirements.txt /comp2/lab/alumnoc/58103-Scalco-Valentina/TP4
-WORKDIR /comp2/lab/alumnoc/58103-Scalco-Valentina/TP4
 
+WORKDIR /lab/alumnos/58103-Scalco-Valentina/TP4/
 
-RUN pip install -r requirements.txt
-RUN pip install parameterized
-
-CMD [ "python3.7", "try.py"]
+CMD [ "python3", "try.py" ]
